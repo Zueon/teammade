@@ -1,4 +1,4 @@
-package com.mztm.teammade.entity;
+package com.mztm.teammade.dto;
 
 import lombok.Data;
 

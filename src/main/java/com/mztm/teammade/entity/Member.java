@@ -32,9 +32,6 @@ public class Member implements UserDetails {
     private String address;
     private String gender;
 
-//    @Enumerated(EnumType.STRING)
-//    private Role role;
-
     private String role;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -80,4 +77,6 @@ public class Member implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }

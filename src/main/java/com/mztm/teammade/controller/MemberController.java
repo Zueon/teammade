@@ -29,16 +29,16 @@ public class MemberController {
                     .nickname(userDTO.getNickname())
                     .email(userDTO.getEmail())
                     .password(userDTO.getPassword())
+                    .gender(userDTO.getGender())
+                    .address(userDTO.getAddress())
+                    .role(userDTO.getRole())
                     .build();
 
             // 서비스 사용하여 생성한 사용자를 레포지터리에 저장한다
             Member registeredUser = memberService.create(user);
 
             // 응답으로 보낼 DTO 생성
-            MemberDto responseUserDTO = MemberDto.builder()
-                    .mid(registeredUser.getMid())
-                    .email(registeredUser.getEmail())
-                    .build();
+            MemberDto responseUserDTO = new MemberDto(registeredUser);
 
             return ResponseEntity.ok().body(responseUserDTO);
         } catch (Exception e) {

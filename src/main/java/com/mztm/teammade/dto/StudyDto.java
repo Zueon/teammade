@@ -1,14 +1,15 @@
 package com.mztm.teammade.dto;
 
 import com.mztm.teammade.entity.MemberDto;
-import com.mztm.teammade.entity.Post;
 import com.mztm.teammade.entity.Project;
+import com.mztm.teammade.entity.Study;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,8 +17,11 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProjectDTO {
-    private Long pid; // 프로젝트 방 번호
+public class StudyDto implements Serializable {
+    private  LocalDateTime createdAt;
+    private  LocalDateTime updatedAt;
+
+    private Long sid; // 프로젝트 방 번호
     private String title; // 프로젝트 방 제목
     private String category_; // 프로젝트 방 카테고리
     private String public_; // 프로젝트 방 공개여부
@@ -30,19 +34,17 @@ public class ProjectDTO {
 
     private List<MemberDto> members;
 
-    public ProjectDTO(Project project) {
+    public StudyDto(Study study) {
 
-        this.pid = project.getId();
-        this.title = project.getTitle();
-        this.category_ = project.getCategory_();
-        this.public_ = project.getPublic_();
-        this.location_ = project.getLocation_();
-        this.introduction = project.getIntroduction();
-        this.startdate = project.getStartdate();
-        this.enddate = project.getEnddate();
-        this.members = project.getMembers().stream().map(MemberDto::new).collect(Collectors.toList());
+        this.sid = study.getId();
+        this.title = study.getTitle();
+        this.category_ = study.getCategory_();
+        this.public_ = study.getPublic_();
+        this.location_ = study.getLocation_();
+        this.introduction = study.getIntroduction();
+        this.startdate = study.getStartdate();
+        this.enddate = study.getEnddate();
+        this.members = study.getMembers().stream().map(MemberDto::new).collect(Collectors.toList());
 
     }
-
-
 }
