@@ -24,6 +24,7 @@ public class MemberAuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody MemberSignupReqDto req){
+
         try {
             Member member = memberService.signup(req);
             MemberDto response = new MemberDto(member);
@@ -39,11 +40,19 @@ public class MemberAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody MemberLoginReqDto memberLoginRequestDto) {
-        String memberId = memberLoginRequestDto.getEmail();
+        String email = memberLoginRequestDto.getEmail();
         String password = memberLoginRequestDto.getPassword();
-        TokenInfo tokenInfo = memberService.login(memberId, password);
+        try {
+            TokenInfo tokenInfo = memberService.login(email, password);
+            return ResponseEntity.ok().body(tokenInfo);
 
+        } catch (Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder()
+                    .error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
 
-        return tokenInfo;
     }
 }

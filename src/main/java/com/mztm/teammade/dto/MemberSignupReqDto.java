@@ -3,9 +3,11 @@ package com.mztm.teammade.dto;
 import com.mztm.teammade.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Collections;
 
+@Setter
 @Getter
 public class MemberSignupReqDto {
     private String email;
@@ -33,7 +35,7 @@ public class MemberSignupReqDto {
                 .email(email)
                 .password(password)
                 .name(name)
-                .roles(Collections.singletonList("ROLE_USER"))
+                .roles(Collections.singletonList("USER"))
                 .build();
     }
 }
