@@ -23,11 +23,9 @@ public class MemberDto implements Serializable {
     private  String name;
     private  String address;
     private  String gender;
-    private  String role;
     private  ProjectDTO project;
     private  StudyDto study;
     private  ResumeDto resume;
-    private  String token;
 
     public MemberDto(Member member) {
         this.mid = member.getMid();
@@ -36,6 +34,5 @@ public class MemberDto implements Serializable {
         this.address = member.getAddress();
         this.email = member.getEmail();
         this.name = member.getName();
-        this.role = member.getRole();
     }
 }
