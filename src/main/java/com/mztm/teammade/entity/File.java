@@ -12,6 +12,7 @@ import javax.persistence.*;
 
 
 
+@Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,8 +20,9 @@ import javax.persistence.*;
 @Table(name ="files")
 public class File extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    private String id;
 
     private String name;
 
@@ -30,10 +32,17 @@ public class File extends BaseEntity {
     @Lob
     private byte[] data;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pid")
     private Project project;
 
 
+    public File(String fileName, String contentType, byte[] bytes, Project project) {
+        this.name = fileName;
+        this.type = contentType;
+        this.data = bytes;
+        this.project = project;
 
+
+    }
 }

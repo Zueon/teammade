@@ -1,16 +1,22 @@
 package com.mztm.teammade.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
 public class FileDto implements Serializable {
-    private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
-    private final Long id;
-    private final String name;
-    private final String type;
-    private final byte[] data;
+
+    private String name;
+    private String url;
+    private String type;
+    private long size;
+
+
 }
