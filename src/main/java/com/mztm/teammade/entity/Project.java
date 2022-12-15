@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Getter
 @Setter
 @Entity
 public class Project extends Post{
@@ -25,17 +25,7 @@ public class Project extends Post{
     @OneToMany(mappedBy = "project")
     private List<Todo> todos = new ArrayList<>();
 
-    public List<Member> getMembers() {
-        return members;
-    }
 
-    public List<File> getFiles() {
-        return files;
-    }
-
-    public List<Todo> getTodos() {
-        return todos;
-    }
 
     public void addMember(Member member){
         members.add(member);
