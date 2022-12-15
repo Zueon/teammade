@@ -40,18 +40,6 @@ public class FileController {
         }
     }
 
-//    @GetMapping("/files")
-//    public ResponseEntity<List<FileInfo>> getListFiles() {
-//        List<FileInfo> fileInfos = storageService.loadAll().map(path -> {
-//            String filename = path.getFileName().toString();
-//            String url = MvcUriComponentsBuilder
-//                    .fromMethodName(FileController.class, "getFile", path.getFileName().toString()).build().toString();
-//
-//            return new FileInfo(filename, url);
-//        }).collect(Collectors.toList());
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
-//    }
 
     @GetMapping("/dbfiles")
     public ResponseEntity<List<FileDto>> getListDBFiles() {

@@ -4,6 +4,7 @@ import com.mztm.teammade.entity.Member;
 import com.mztm.teammade.persistence.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Member create(Member member) {
@@ -23,6 +25,8 @@ public class MemberServiceImpl implements MemberService{
             log.warn("{} already exists",email);
             throw new RuntimeException("Email already exists");
         }
+
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
         return memberRepository.save(member);
     }
 

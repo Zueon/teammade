@@ -25,7 +25,7 @@ public class PostController {
     private final PostService postService;
     private final MemberRepository memberRepository;
 
-    @GetMapping("/projects")
+    @GetMapping("/project")
     public ResponseEntity<?> getProjects(){
         List<Project> projectEntities =  postService.getProjectList();
         List<ProjectDTO> projectList = projectEntities.stream().map(ProjectDTO::new).collect(Collectors.toList());
@@ -59,7 +59,7 @@ public class PostController {
     }
 
 
-    @GetMapping("/studies")
+    @GetMapping("/study")
     public ResponseEntity<?> getStudies(){
         List<Study> studyEntities =  postService.getStudyList();
         List<StudyDto> studyList = studyEntities.stream().map(StudyDto::new).collect(Collectors.toList());

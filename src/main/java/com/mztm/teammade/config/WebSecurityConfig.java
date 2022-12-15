@@ -1,6 +1,7 @@
 package com.mztm.teammade.config;
 
 
+import com.mztm.teammade.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -10,14 +11,14 @@ import org.springframework.core.Ordered;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.filter.CorsFilter;
 
 
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE + 10)
 @Configuration
 @RequiredArgsConstructor
 public class WebSecurityConfig {
-
-
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
         security.cors() // WebMvcConfig에서 이미 설정했으므로 기본 cors 설정.
@@ -30,11 +31,16 @@ public class WebSecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests() // /와 /auth/** 경로는 인증 안해도 됨.
-                .antMatchers("/auth/**", "/**").permitAll()
+                .antMatchers("/auth/**", "/project", "/study").permitAll()
+                .anyRequest().hasRole("USER")
                 .anyRequest() // /와 /auth/**이외의 모든 경로는 인증 해야됨.
                 .authenticated();
 
 
+        security.addFilterAfter(
+                jwtAuthenticationFilter,
+                CorsFilter.class
+        );
         return security.build();
 
     }
