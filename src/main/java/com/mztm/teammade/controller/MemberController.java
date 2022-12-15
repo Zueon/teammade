@@ -31,7 +31,6 @@ public class MemberController {
                     .password(userDTO.getPassword())
                     .gender(userDTO.getGender())
                     .address(userDTO.getAddress())
-                    .role(userDTO.getRole())
                     .build();
 
             // 서비스 사용하여 생성한 사용자를 레포지터리에 저장한다

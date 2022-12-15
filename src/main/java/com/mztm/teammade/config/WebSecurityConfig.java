@@ -2,6 +2,7 @@ package com.mztm.teammade.config;
 
 
 import com.mztm.teammade.security.JwtAuthenticationFilter;
+import com.mztm.teammade.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -10,7 +11,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
 
@@ -18,7 +22,8 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @RequiredArgsConstructor
 public class WebSecurityConfig {
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtTokenProvider jwtTokenProvider;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity security) throws Exception {
         security.cors() // WebMvcConfig에서 이미 설정했으므로 기본 cors 설정.
@@ -32,17 +37,18 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeRequests() // /와 /auth/** 경로는 인증 안해도 됨.
                 .antMatchers("/auth/**", "/project", "/study").permitAll()
-                .anyRequest().hasRole("USER")
+                .antMatchers("/project/create", "/study/create").hasRole("USER")
                 .anyRequest() // /와 /auth/**이외의 모든 경로는 인증 해야됨.
-                .authenticated();
+                .authenticated()
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
-
-        security.addFilterAfter(
-                jwtAuthenticationFilter,
-                CorsFilter.class
-        );
         return security.build();
 
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 }
