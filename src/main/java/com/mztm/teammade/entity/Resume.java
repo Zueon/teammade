@@ -5,11 +5,13 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
+@Getter
 @Entity
 public class Resume  extends BaseEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long rid;
+    @GeneratedValue(generator = "system-uuid")
+    @GenericGenerator(name = "system-uuid", strategy = "uuid")
+    private String rid;
 
     private String name;
 
@@ -22,4 +24,15 @@ public class Resume  extends BaseEntity{
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "creator_mid")
     private Member creator;
+
+    public Resume(String fileName, String contentType, byte[] bytes, Member creator) {
+        this.name=fileName;
+        this.type = contentType;
+        this.data=bytes;
+        this.creator=creator;
+    }
+
+    public Resume() {
+
+    }
 }

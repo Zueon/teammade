@@ -1,6 +1,9 @@
 package com.mztm.teammade.service;
 
+import com.mztm.teammade.dto.ResumeDto;
 import com.mztm.teammade.entity.File;
+import com.mztm.teammade.entity.Member;
+import com.mztm.teammade.entity.Resume;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,8 +22,10 @@ public interface FileStorageService {
 
     public Stream<Path> loadAll();
 
-    public File store(MultipartFile file) throws IOException;
+    public Resume storeResume(MultipartFile file, String email) throws IOException;
+    public ResumeDto getResume(Member member);
+    public File store(MultipartFile file, Long projectId) throws IOException;
     public File getFile(String id);
-    public Stream<File> getAllFiles();
+    public Stream<File> getAllFiles(Long projectId);
 
 }

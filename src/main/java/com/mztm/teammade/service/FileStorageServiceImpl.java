@@ -1,17 +1,25 @@
 package com.mztm.teammade.service;
 
+import com.mztm.teammade.dto.FileDto;
+import com.mztm.teammade.dto.ResumeDto;
 import com.mztm.teammade.entity.File;
+import com.mztm.teammade.entity.Member;
 import com.mztm.teammade.entity.Project;
+import com.mztm.teammade.entity.Resume;
 import com.mztm.teammade.persistence.FileRepository;
+import com.mztm.teammade.persistence.MemberRepository;
 import com.mztm.teammade.persistence.ProjectRepository;
+import com.mztm.teammade.persistence.ResumeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -19,6 +27,7 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -27,6 +36,8 @@ import java.util.stream.Stream;
 public class FileStorageServiceImpl implements FileStorageService{
     private final FileRepository fileRepository;
     private final ProjectRepository projectRepository;
+    private final MemberRepository memberRepository;
+    private final ResumeRepository resumeRepository;
     private final Path root = Paths.get("uploads");
 
     @Override
@@ -80,9 +91,9 @@ public class FileStorageServiceImpl implements FileStorageService{
         }
     }
     @Override
-    public File store(MultipartFile file) throws IOException {
+    public File store(MultipartFile file, Long projectId) throws IOException {
         log.info("store");
-        Project temp = projectRepository.findById(1L).get();
+        Project temp = projectRepository.findById(projectId).get();
 
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         log.info("filename" + fileName);
@@ -93,14 +104,45 @@ public class FileStorageServiceImpl implements FileStorageService{
     }
 
     @Override
+    @Transactional
+    public Resume storeResume(MultipartFile file, String email) throws IOException {
+        log.info("store");
+        Member creator = memberRepository.findByEmail(email).get();
+        log.info(creator);
+
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        log.info("filename" + fileName);
+        Resume resume = new Resume(fileName, file.getContentType(), file.getBytes(), creator);
+        creator.setResume(resume);
+
+
+        return resumeRepository.save(resume);
+    }
+
+    @Override
     public File getFile(String id) {
         return fileRepository.findById(id).get();
     }
 
+    @Override
+    public ResumeDto getResume(Member member) {
+        Resume file = resumeRepository.findByCreator(member);
+        String fileDownloadUri = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/files/")
+                .path(file.getRid())
+                .toUriString();
+
+        return ResumeDto.builder()
+                .createdAt(file.getCreatedAt())
+                .name(file.getName())
+                .url(fileDownloadUri)
+                .build();
+    }
 
     @Override
-    public Stream<File> getAllFiles() {
-        Project temp = projectRepository.findById(1L).get();
+    public Stream<File> getAllFiles(Long projectId) {
+        Project temp = projectRepository.findById(projectId).get();
 
         return fileRepository.findByProject(temp).stream();
     }

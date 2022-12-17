@@ -50,4 +50,10 @@ public class MemberServiceImpl implements MemberService{
         }
         throw new RuntimeException("Fail to Signup");
     }
+
+    @Override
+    public Member getMemberByEmail(String email) {
+
+        return memberRepository.findByEmail(email).get();
+    }
 }

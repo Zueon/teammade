@@ -34,5 +34,9 @@ public class MemberDto implements Serializable {
         this.address = member.getAddress();
         this.email = member.getEmail();
         this.name = member.getName();
+        this.project = ProjectDTO.builder()
+                .pid(member.getProject().getId())
+                .title(member.getProject().getTitle())
+                .build();
     }
 }

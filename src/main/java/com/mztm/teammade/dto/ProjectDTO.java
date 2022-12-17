@@ -42,7 +42,7 @@ public class ProjectDTO {
         this.startdate = project.getStartdate();
         this.enddate = project.getEnddate();
         this.members = project.getMembers().stream().map(MemberDto::new).collect(Collectors.toList());
-        this.todos = project.getTodos().stream().map(TodoDto::new).collect(Collectors.toList());
+//        this.todos = project.getTodos().stream().map(TodoDto::new).collect(Collectors.toList());
 
     }
 

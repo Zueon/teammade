@@ -8,5 +8,6 @@ public interface MemberService {
 
     TokenInfo login(String email, String password);
     Member signup(MemberSignupReqDto req);
+    Member getMemberByEmail(String email);
 
 }
