@@ -78,6 +78,24 @@ public class ProjectController {
 
     //--------------------------- 프로젝트 파일 처리 ----------------------------//
 
+    private List<FileDto> getProjectFileList(Project project) {
+        List<FileDto> files = storageService.getAllFiles(project).map(dbFile -> {
+            String fileDownloadUri = ServletUriComponentsBuilder
+                    .fromCurrentContextPath()
+                    .path("/files/")
+                    .path(dbFile.getId())
+                    .toUriString();
+
+            return new FileDto(
+                    dbFile.getName(),
+                    fileDownloadUri,
+                    dbFile.getType(),
+                    dbFile.getData().length);
+        }).collect(Collectors.toList());
+        return files;
+    }
+
+
     @PostMapping("/{pid}/files/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file, @PathVariable("pid") Long pid) {
         String message = "";
@@ -97,21 +115,21 @@ public class ProjectController {
 
     @GetMapping("/{pid}/files")
     public ResponseEntity<List<FileDto>> getListDBFiles(@PathVariable("pid") Long pid) {
-        List<FileDto> files = storageService.getAllFiles(pid).map(dbFile -> {
-            String fileDownloadUri = ServletUriComponentsBuilder
-                    .fromCurrentContextPath()
-                    .path("/files/")
-                    .path(dbFile.getId())
-                    .toUriString();
-
-            return new FileDto(
-                    dbFile.getName(),
-                    fileDownloadUri,
-                    dbFile.getType(),
-                    dbFile.getData().length);
-        }).collect(Collectors.toList());
+        Project project = projectRepository.findById(pid).get();
+        List<FileDto> files = getProjectFileList(project);
 
         return ResponseEntity.status(HttpStatus.OK).body(files);
+    }
+
+    @DeleteMapping("/{pid}/files")
+    public ResponseEntity<List<FileDto>> deleteFile(@PathVariable Long pid, @RequestParam("fileId") String fileId){
+        Project project = projectRepository.findById(pid).get();
+
+        storageService.deleteFile(fileId);
+        List<FileDto> files = getProjectFileList(project);
+
+        return ResponseEntity.status(HttpStatus.OK).body(files);
+
     }
 
 

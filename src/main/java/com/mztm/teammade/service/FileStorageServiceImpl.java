@@ -143,9 +143,22 @@ public class FileStorageServiceImpl implements FileStorageService{
     }
 
     @Override
-    public Stream<File> getAllFiles(Long projectId) {
-        Project temp = projectRepository.findById(projectId).get();
+    public Stream<File> getAllFiles(Project project) {
+        return fileRepository.findByProject(project).stream();
+    }
 
-        return fileRepository.findByProject(temp).stream();
+    @Override
+    public Stream<File> deleteFile(String fileId) {
+        Project project = fileRepository.findById(fileId).get().getProject();
+        try{
+            fileRepository.deleteById(fileId);
+        } catch (Exception e){
+            log.error(e);
+            throw new RuntimeException("Error deleting Entity");
+
+        }
+
+        return getAllFiles(project);
+
     }
 }

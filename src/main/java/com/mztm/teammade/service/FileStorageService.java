@@ -3,6 +3,7 @@ package com.mztm.teammade.service;
 import com.mztm.teammade.dto.ResumeDto;
 import com.mztm.teammade.entity.File;
 import com.mztm.teammade.entity.Member;
+import com.mztm.teammade.entity.Project;
 import com.mztm.teammade.entity.Resume;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,20 +13,22 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 public interface FileStorageService {
-    public void init();
+     void init();
 
-    public void save(MultipartFile file);
+     void save(MultipartFile file);
 
-    public Resource load(String filename);
+     Resource load(String filename);
 
-    public void deleteAll();
+     void deleteAll();
 
-    public Stream<Path> loadAll();
+     Stream<Path> loadAll();
 
-    public Resume storeResume(MultipartFile file, String email) throws IOException;
-    public ResumeDto getResume(Member member);
-    public File store(MultipartFile file, Long projectId) throws IOException;
-    public File getFile(String id);
-    public Stream<File> getAllFiles(Long projectId);
+     Resume storeResume(MultipartFile file, String email) throws IOException;
+     ResumeDto getResume(Member member);
+
+     File store(MultipartFile file, Long projectId) throws IOException;
+     File getFile(String id);
+     Stream<File> getAllFiles(Project project);
+     Stream<File> deleteFile(String fileId);
 
 }
