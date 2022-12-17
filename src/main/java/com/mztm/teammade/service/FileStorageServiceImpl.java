@@ -90,6 +90,8 @@ public class FileStorageServiceImpl implements FileStorageService{
             throw new RuntimeException("Could not load the files!");
         }
     }
+
+    // ---------------------------파일 업로드 to DB -------------------------//
     @Override
     public File store(MultipartFile file, Long projectId) throws IOException {
         log.info("store");
