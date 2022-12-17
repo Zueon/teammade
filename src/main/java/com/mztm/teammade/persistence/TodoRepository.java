@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface TodoRepository extends JpaRepository<Todo, String> {
+public interface TodoRepository extends JpaRepository<Todo, Long> {
     List<Todo> findByProject(Project project);
 
 }

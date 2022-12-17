@@ -8,6 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Log4j2
@@ -40,5 +41,34 @@ public class TodoServiceImpl implements TodoService{
     @Override
     public List<Todo> retrieve(Project project) {
         return todoRepository.findByProject(project);
+    }
+
+    @Override
+    public List<Todo> update(Todo todo) {
+        validate(todo);
+
+        final Optional<Todo> original = todoRepository.findById(todo.getTid());
+
+        original.ifPresent(prev -> {
+            prev.setTitle(todo.getTitle());
+            prev.setIsDone(todo.getIsDone());
+            prev.setUpdatedAt(todo.getCreatedAt());
+
+            todoRepository.save(prev);
+        });
+        return retrieve(todo.getProject());
+    }
+
+    @Override
+    public List<Todo> delete(Todo todo) {
+        validate(todo);
+
+        try {
+            todoRepository.delete(todo);
+        } catch (Exception e){
+            log.error("Todo Entity 삭제에 문제가 발생하였습니다. " + todo.getTid(), e);
+            throw new RuntimeException("Error deleting entity " + todo.getTid());
+        }
+        return retrieve(todo.getProject());
     }
 }

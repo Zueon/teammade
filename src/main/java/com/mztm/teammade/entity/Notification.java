@@ -14,12 +14,10 @@ public class Notification extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long nid;
 
-    @Enumerated(EnumType.STRING)
-    private NotificationType type;
+    private String type;
 
     private String sender;
     private String receiver;
 
-    @Enumerated(EnumType.STRING)
-    private StringContent content;
+    private String content;
 }
