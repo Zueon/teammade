@@ -1,8 +1,9 @@
-package com.mztm.teammade.entity;
+package com.mztm.teammade.dto;
 
 import com.mztm.teammade.dto.ProjectDTO;
 import com.mztm.teammade.dto.ResumeDto;
 import com.mztm.teammade.dto.StudyDto;
+import com.mztm.teammade.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

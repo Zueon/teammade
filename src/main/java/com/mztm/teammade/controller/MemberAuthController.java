@@ -5,7 +5,7 @@ import com.mztm.teammade.dto.MemberSignupReqDto;
 import com.mztm.teammade.dto.ResponseDTO;
 import com.mztm.teammade.dto.TokenInfo;
 import com.mztm.teammade.entity.Member;
-import com.mztm.teammade.entity.MemberDto;
+import com.mztm.teammade.dto.MemberDto;
 import com.mztm.teammade.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

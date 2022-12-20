@@ -45,9 +45,27 @@ public class Member implements UserDetails {
     @OneToOne(fetch = FetchType.LAZY)
     private Resume resume;
 
+    @OneToMany(mappedBy = "sender")
+    private List<Notification> sendList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiver")
+    private List<Notification> receiveList = new ArrayList<>();
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
+
+
+    public void addToSendList(Notification notification) {
+        sendList.add(notification);
+        notification.setSender(this);
+    }
+
+    public void addToReceiveList(Notification notification){
+        receiveList.add(notification);
+        notification.setReceiver(this);
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

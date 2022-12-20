@@ -1,7 +1,5 @@
 package com.mztm.teammade.dto;
 
-import com.mztm.teammade.entity.MemberDto;
-import com.mztm.teammade.entity.Project;
 import com.mztm.teammade.entity.Study;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

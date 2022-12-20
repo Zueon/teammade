@@ -54,6 +54,6 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Member getMemberByEmail(String email) {
 
-        return memberRepository.findByEmail(email).get();
+        return memberRepository.findByEmail(email).orElseThrow(()->new IllegalArgumentException("존재하지 않는 사용자입니다!"));
     }
 }

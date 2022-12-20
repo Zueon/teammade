@@ -1,14 +1,11 @@
 package com.mztm.teammade.dto;
 
-import com.mztm.teammade.entity.MemberDto;
-import com.mztm.teammade.entity.Post;
 import com.mztm.teammade.entity.Project;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
