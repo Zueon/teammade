@@ -3,7 +3,8 @@ package com.mztm.teammade.controller;
 
 import com.mztm.teammade.dto.*;
 import com.mztm.teammade.entity.Member;
-import com.mztm.teammade.entity.MemberDto;
+import com.mztm.teammade.dto.MemberDto;
+import com.mztm.teammade.entity.Notification;
 import com.mztm.teammade.service.FileStorageService;
 import com.mztm.teammade.service.MemberService;
 import com.mztm.teammade.utils.SecurityUtil;
@@ -13,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -87,7 +87,15 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/project")
+    @GetMapping("/sentNotifications")
+    public ResponseEntity<?> sentList(){
+        Member member=memberService.getMemberByEmail(SecurityUtil.getCurrentMemberEmail());
+        List<Notification> entities = member.getSendList();
+        List<NotificationDto> sentNotifications = entities.stream().map(NotificationDto::new).collect(Collectors.toList());
+        ResponseDTO<NotificationDto> response = ResponseDTO.<NotificationDto>builder().data(sentNotifications).build();
+
+        return ResponseEntity.ok().body(response);
+    }
 
 
     public void updateMember(){}

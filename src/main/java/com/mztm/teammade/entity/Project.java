@@ -6,6 +6,8 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -35,6 +37,7 @@ public class Project extends Post{
     public void addHost(Member member){
         this.host = member;
         member.setProject(this);
+        member.setRoles(Arrays.asList("USER", "HOST"));
     }
 
 
@@ -48,6 +51,7 @@ public class Project extends Post{
     }
 
     public Project(ProjectDTO dto) {
+        setId(dto.getPid());
         setTitle(dto.getTitle());
         setCategory_(dto.getCategory_());
         setIntroduction(dto.getIntroduction());

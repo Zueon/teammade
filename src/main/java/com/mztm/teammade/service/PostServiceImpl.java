@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Log4j2
@@ -17,6 +18,11 @@ import java.util.List;
 public class PostServiceImpl implements PostService{
     private final ProjectRepository projectRepository;
     private final StudyRepository studyRepository;
+
+    @Override
+    public Project getProject(Long pid) {
+        return projectRepository.findById(pid).orElseThrow(()->  new IllegalArgumentException("invalid project"));
+    }
 
     @Override
     public Project createProject(Project project) {
@@ -33,13 +39,39 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Project updateProject(Project project) {
-        return null;
+        validate(project);
+
+        Optional<Project> original = projectRepository.findById(project.getId());
+        original.ifPresent(proj -> {
+            proj.setStartdate(project.getStartdate());
+            proj.setEnddate(project.getEnddate());
+            proj.setPublic_(project.getPublic_());
+            proj.setIntroduction(project.getIntroduction());
+            proj.setLocation_(project.getLocation_());
+            proj.setCategory_(project.getCategory_());
+            proj.setTitle(project.getTitle());
+
+            projectRepository.save(proj);
+
+        });
+
+        return getProject(project.getId());
     }
 
     @Override
     public List<Project> deleteProject(Project project) {
-        return null;
+        validate(project);
+        try {
+            projectRepository.delete(project);
+        } catch (Exception e ){
+            log.error("ERROR DELETING ENTITY" + project.getId(), e);
+            throw new RuntimeException("ERROR DELETING ENTITY" + project.getId());
+        }
+
+        return getProjectList();
     }
+
+
 
     private void validate(Post post){
         if (post == null) {

@@ -1,5 +1,6 @@
 package com.mztm.teammade.entity;
 
+import com.mztm.teammade.dto.NotificationDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.persistence.*;
 @Builder
 @Entity
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Notification extends BaseEntity{
@@ -16,8 +18,26 @@ public class Notification extends BaseEntity{
 
     private String type;
 
-    private String sender;
-    private String receiver;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender")
+    private Member sender;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name ="receiver")
+    private Member receiver;
 
     private String content;
+
+    public static NotificationDto toDto(Notification notification){
+        return NotificationDto.builder()
+                .content(notification.getContent())
+                .receiver(notification.getReceiver().getNickname())
+                .receiverId(notification.getReceiver().getMid())
+                .sender(notification.getSender().getNickname())
+                .senderId(notification.getSender().getMid())
+                .createdAt(notification.getCreatedAt())
+                .type(notification.getType())
+                .build();
+
+    }
 }

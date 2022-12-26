@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Setter
@@ -35,7 +36,7 @@ public class MemberSignupReqDto {
                 .email(email)
                 .password(password)
                 .name(name)
-                .roles(Collections.singletonList("USER"))
+                .roles(Arrays.asList("USER"))
                 .build();
     }
 }

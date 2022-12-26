@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -37,8 +38,10 @@ public class ProjectController {
     private final ProjectRepository projectRepository;
 
 
+
+
     // 프로젝트 리스트 받기
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<?> getProjects() {
         // Entities 받은 후 이를 바로 클라이언트로 반환 X
         // Entity를 DTO로 변환하여 보내야할 정보만 반환한다.
@@ -52,15 +55,16 @@ public class ProjectController {
     }
 
 
-    @PostMapping("/create")
-    public ResponseEntity createPost(@RequestBody ProjectDTO dto) {
-        String email = SecurityUtil.getCurrentMemberEmail();
-        Member member = memberService.getMemberByEmail(email);
+    @PostMapping
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> createPost(@RequestBody ProjectDTO dto) {
+        String memberEmail = SecurityUtil.getCurrentMemberEmail();
+        Member loginedMember = memberService.getMemberByEmail(memberEmail);
         try {
 
             Project project = new Project(dto);
-            project.addHost(member);
-            project.addMember(member);
+            project.addHost(loginedMember);
+            project.addMember(loginedMember);
 
             Project createProject = postService.createProject(project);
             ProjectDTO createProjectDTO = new ProjectDTO(createProject);
@@ -76,6 +80,47 @@ public class ProjectController {
         }
     }
 
+    @PutMapping
+    @PreAuthorize("hasRole('HOST')")
+    public ResponseEntity<?> updatePost(@RequestBody ProjectDTO dto) {
+
+        try {
+            Project project = new Project(dto);
+
+            Project updatedProject = postService.updateProject(project);
+            ProjectDTO updatedProjectDTO = new ProjectDTO(updatedProject);
+
+            ResponseDTO<ProjectDTO> response = ResponseDTO.<ProjectDTO>builder().data(updatedProjectDTO).build();
+            return ResponseEntity.ok().body(response);
+
+        } catch (Exception e) {
+            String err = e.getMessage();
+            ResponseDTO<ProjectDTO> response = ResponseDTO.<ProjectDTO>builder().error(err).build();
+
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @DeleteMapping
+    @PreAuthorize("hasRole('HOST')")
+    public ResponseEntity<?> deletePost (@RequestBody ProjectDTO dto){
+        try {
+            Project projectEntity = new Project(dto);
+            List<Project> entities = postService.deleteProject(projectEntity);
+            List<ProjectDTO> projectList = entities.stream().map(ProjectDTO::new).collect(Collectors.toList());
+
+            ResponseDTO<ProjectDTO> response = ResponseDTO.<ProjectDTO>builder().data(projectList).build();
+
+            return ResponseEntity.ok().body(response);
+
+        } catch (Exception e){
+            String err = e.getMessage();
+            ResponseDTO<ProjectDTO> response = ResponseDTO.<ProjectDTO>builder().error(err).build();
+
+            return ResponseEntity.badRequest().body(response);
+        }
+
+    }
     //--------------------------- 프로젝트 파일 처리 ----------------------------//
 
     private List<FileDto> getProjectFileList(Project project) {
