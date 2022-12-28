@@ -96,6 +96,26 @@
             <artifactId>jakarta.persistence-api</artifactId>
             <version>2.2.3</version>
         </dependency>
+
+<!--    채팅을 위한 의존성 추가    -->
+        <!--   dynamoDB 의존성     -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-dynamodb</artifactId>
+            <version>1.11.857</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.derjust</groupId>
+            <artifactId>spring-data-dynamodb</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+        <!--   end : dynamoDB 의존성     -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+<!--    end : 채팅을 위한 의존성    -->
+
     </dependencies>
 
     <build>
