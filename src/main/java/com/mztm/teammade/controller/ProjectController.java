@@ -54,6 +54,16 @@ public class ProjectController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping("/{pid}")
+    public ResponseEntity<?> getProject(@PathVariable Long pid){
+        Project project = postService.getProject(pid);
+        ProjectDTO projectDTO = new ProjectDTO(project);
+
+        ResponseDTO<ProjectDTO> response = ResponseDTO.<ProjectDTO>builder().data(projectDTO).build();
+
+        return ResponseEntity.ok().body(response);
+
+    }
 
     @PostMapping
     @PreAuthorize("hasRole('USER')")

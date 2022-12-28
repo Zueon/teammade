@@ -48,7 +48,7 @@ public class MemberServiceImpl implements MemberService{
         if (memberRepository.findByEmail(req.getEmail()).orElse(null)==null){
             return memberRepository.save(req.toEntity());
         }
-        throw new RuntimeException("Fail to Signup");
+        return memberRepository.save(req.toEntity());
     }
 
     @Override

@@ -26,6 +26,7 @@ public class ProjectDTO {
     private Long hostId;
 
     private List<MemberDto> members;
+    private List<TodoDto> todos;
 
     public ProjectDTO(Project project) {
 
@@ -38,6 +39,7 @@ public class ProjectDTO {
         this.startdate = project.getStartdate();
         this.enddate = project.getEnddate();
         this.members = project.getMembers().stream().map(MemberDto::new).collect(Collectors.toList());
+        this.todos = project.getTodos().stream().map(TodoDto::new).collect(Collectors.toList());
 
 
     }

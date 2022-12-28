@@ -65,7 +65,7 @@ public class NotificationServiceImpl implements NotificationService{
 
         Project project = projectRepo.findById(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("invalid project"));
-        Member applier = memberRepo.findByEmail(applierEmail)
+        Member applier = memberRepo.findByNickname(applierEmail)
                 .orElseThrow(() -> new IllegalArgumentException("invalid applier"));
         Member host = project.getHost();
         if (host == null) throw new IllegalArgumentException("invalid host");
@@ -74,7 +74,7 @@ public class NotificationServiceImpl implements NotificationService{
 
         project.addMember(applier);
 
-        content = applier.getNickname() + "님의 프로젝트에 참가를 신청이 수락되었습니다!";
+        content = applier.getNickname() + "님의 프로젝트 참가 신청이 수락되었습니다!";
 
         Notification notification = Notification.builder()
                 .content(content)

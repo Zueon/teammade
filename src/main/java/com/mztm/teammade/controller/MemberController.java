@@ -5,6 +5,8 @@ import com.mztm.teammade.dto.*;
 import com.mztm.teammade.entity.Member;
 import com.mztm.teammade.dto.MemberDto;
 import com.mztm.teammade.entity.Notification;
+import com.mztm.teammade.entity.Project;
+import com.mztm.teammade.persistence.ProjectRepository;
 import com.mztm.teammade.service.FileStorageService;
 import com.mztm.teammade.service.MemberService;
 import com.mztm.teammade.utils.SecurityUtil;
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 public class MemberController {
     private final MemberService memberService;
     private final FileStorageService storageService;
+    private final ProjectRepository projectRepository;
 
 
     @GetMapping("/")
@@ -38,9 +41,14 @@ public class MemberController {
         ResumeDto resumeDto = null;
 
         if (member.getProject() != null){
+            Project proj = projectRepository.findById(member.getProject().getId()).orElseThrow(()->new IllegalArgumentException("존재하지 !"));
              projectDto = ProjectDTO.builder()
-                    .title(member.getProject().getTitle())
-                    .build();
+                     .members(proj.getMembers().stream().map(MemberDto::new).collect(Collectors.toList()))
+                     .todos(proj.getTodos().stream().map(TodoDto::new).collect(Collectors.toList()))
+                     .title(member.getProject().getTitle())
+                     .pid(member.getProject().getId())
+                     .hostId(member.getProject().getHost().getMid())
+                     .build();
         }
 
         if (member.getStudy() != null){
@@ -62,6 +70,7 @@ public class MemberController {
                 .project(projectDto)
                 .study(studyDto)
                 .resume(resumeDto)
+                .mid(member.getMid())
                 .build();
 
 

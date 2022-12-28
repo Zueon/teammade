@@ -5,12 +5,14 @@ import com.mztm.teammade.dto.NotificationDto;
 import com.mztm.teammade.dto.ResponseDTO;
 import com.mztm.teammade.entity.Member;
 import com.mztm.teammade.entity.Project;
+import com.mztm.teammade.security.JwtTokenProvider;
 import com.mztm.teammade.service.MemberService;
 import com.mztm.teammade.service.NotificationService;
 import com.mztm.teammade.utils.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -23,12 +25,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NotificationController {
     private final MemberService memberService;
     private final NotificationService notificationService;
+    private final JwtTokenProvider tokenProvider;
     public static Map<Long, SseEmitter> sseEmitters = new ConcurrentHashMap<>();
 
 
     @GetMapping("/subscribe")
-    public SseEmitter subscribe() {
-        String email = SecurityUtil.getCurrentMemberEmail();
+    public SseEmitter subscribe(@RequestParam String token) {
+
+        String email = tokenProvider.validateAndGetUserEmail(token);
         Member subscriber = memberService.getMemberByEmail(email);
         Long subscriberId = subscriber.getMid();
 

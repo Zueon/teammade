@@ -25,7 +25,7 @@ public class StudyController {
     private final MemberService memberService;
 
 
-    @GetMapping
+    @GetMapping("list")
     public ResponseEntity<?> getStudies(){
         List<Study> studyEntities =  postService.getStudyList();
         List<StudyDto> studyList = studyEntities.stream().map(StudyDto::new).collect(Collectors.toList());

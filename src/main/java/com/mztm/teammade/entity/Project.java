@@ -46,6 +46,17 @@ public class Project extends Post{
         todo.setProject(this);
     }
 
+    public void removeAllMember(){
+        members.forEach(member -> member.setProject(null));
+        members.clear();
+
+    }
+
+    public void removeTodos(){
+        todos.forEach(todo -> todo.setProject(null));
+        todos.clear();
+
+    }
 
     public Project() {
     }
